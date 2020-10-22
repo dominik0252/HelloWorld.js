@@ -1,0 +1,14 @@
+{
+  "name": "helloworld",
+  "version": "1.0.0",
+  "description": "dvidusin's Node.js hello world package",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "dvidusin",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
