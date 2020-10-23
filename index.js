@@ -88,6 +88,19 @@ app.use('/', (req, res) => {              // specifying that the URI '/' will tr
   // res.send('Hello World!');
 });
 */
+
+app.use('/', (req, res) => {
+  var query = req.query;
+  console.log(query);
+
+  var name = query.name;
+  var location = query.location;
+
+  var length = Object.keys(query).length;
+
+  res.send('Hello ' + name + ' from ' + location + '!');
+});
+
 app.use(/*default*/ (req, res) => {
   res.status(404).sendFile(__dirname + '/404.html'); // __dirname specifies the location where we've installed our Node.js app
 });
