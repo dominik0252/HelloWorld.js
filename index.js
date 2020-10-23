@@ -1,6 +1,14 @@
 var express = require('express');
 var app = express();                      // to create an express app
 
+app.use('/about', (req, res) => {
+  res.send('This is the about page.');
+});
+
+app.use('/login', (req, res) => {
+  res.send('This is the login page.');
+});
+
 // we configure our app by setting up an event handler or a callback function
 app.use('/', (req, res) => {              // specifying that the URI '/' will trigger an event
                                           // the event is invoke the callback function that takes the request object and the response object
@@ -29,6 +37,10 @@ app.use('/', (req, res) => {              // specifying that the URI '/' will tr
   res.end();
 
   // res.send('Hello World!');
+});
+
+app.use(/*default*/ (req, res) => {
+  res.status(404).send('Not found.');
 });
 
 app.listen(3000, () => {                  // configure the app so that it's listening on the port 3000
