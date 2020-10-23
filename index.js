@@ -1,6 +1,8 @@
 var express = require('express');
 var app = express();                      // to create an express app
 
+app.set('view engine', 'ejs'); // set EJS as the default rendering method
+
 var logger = (req, res, next) => {
   var url = req.url;
   var time = new Date();
@@ -49,8 +51,8 @@ app.use('/login', (req, res) => {
 
 app.use('/public', logger, express.static('files')); // we can have any number of middleware functions specified in the app.use function
 
-app.use('/welcome', logger, nameFinder, commonRoute, (req, res) => {
-  res.end();
+app.use('/welcome', logger, nameFinder, (req, res) => {
+  res.render('welcome', { username: req.username, isAdmin: true });
 });
 
 app.use('/admin', logger, adminName, commonRoute, (req, res) => {
@@ -106,8 +108,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use('/handleForm', (req, res) => {
   var name = req.body.username;
-  var animals = req.body.animal; // this is an array
-  res.send(name + ' loves ' + animals.join());
+  var animals = [].concat(req.body.animal); // this is an array
+  res.render('showAnimals', { name: name, animals: animals });
 })
 
 app.use('/', (req, res) => {
