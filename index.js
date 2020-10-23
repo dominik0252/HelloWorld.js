@@ -8,6 +8,24 @@ var logger = (req, res, next) => {
   next();
 }
 
+var nameFinder = (req, res, next) => {
+  var name = req.query.name;
+  if (name) req.username = name.toUpperCase();
+  else req.username = 'Guest';
+  next();
+}
+
+var greeter = (req, res, next) => {
+  res.status(200).type('html');
+  res.write('Hello, ' + req.username);
+  next();
+}
+
+var adminName = (req, res, next) => {
+  req.username = 'Admin';
+  next();
+}
+
 // app.use(logger); // will be invoked on any HTTP request
 
 app.use('/about', (req, res) => {
@@ -19,6 +37,15 @@ app.use('/login', (req, res) => {
 });
 
 app.use('/public', logger, express.static('files')); // we can have any number of middleware functions specified in the app.use function
+
+app.use('/welcome', nameFinder, greeter, (req, res) => {
+  res.end();
+});
+
+app.use('/admin', adminName, greeter, (req, res) => {
+  res.end();
+});
+
 /*
 // we configure our app by setting up an event handler or a callback function
 app.use('/', (req, res) => {              // specifying that the URI '/' will trigger an event
