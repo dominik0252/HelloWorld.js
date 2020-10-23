@@ -9,6 +9,8 @@ app.use('/login', (req, res) => {
   res.send('This is the login page.');
 });
 
+app.use('/public', express.static('files'));
+/*
 // we configure our app by setting up an event handler or a callback function
 app.use('/', (req, res) => {              // specifying that the URI '/' will trigger an event
                                           // the event is invoke the callback function that takes the request object and the response object
@@ -38,9 +40,9 @@ app.use('/', (req, res) => {              // specifying that the URI '/' will tr
 
   // res.send('Hello World!');
 });
-
+*/
 app.use(/*default*/ (req, res) => {
-  res.status(404).send('Not found.');
+  res.status(404).sendFile(__dirname + '/404.html'); // __dirname specifies the location where we've installed our Node.js app
 });
 
 app.listen(3000, () => {                  // configure the app so that it's listening on the port 3000
