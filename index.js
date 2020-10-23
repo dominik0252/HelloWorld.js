@@ -1,6 +1,15 @@
 var express = require('express');
 var app = express();                      // to create an express app
 
+var logger = (req, res, next) => {
+  var url = req.url;
+  var time = new Date();
+  console.log('Received request for ' + url + ' at ' + time);
+  next();
+}
+
+// app.use(logger); // will be invoked on any HTTP request
+
 app.use('/about', (req, res) => {
   res.send('This is the about page.');
 });
@@ -9,7 +18,7 @@ app.use('/login', (req, res) => {
   res.send('This is the login page.');
 });
 
-app.use('/public', express.static('files'));
+app.use('/public', logger, express.static('files')); // we can have any number of middleware functions specified in the app.use function
 /*
 // we configure our app by setting up an event handler or a callback function
 app.use('/', (req, res) => {              // specifying that the URI '/' will trigger an event
