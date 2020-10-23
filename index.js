@@ -110,8 +110,8 @@ app.use('/handleForm', (req, res) => {
   var name = req.body.username;
   var animals = [].concat(req.body.animal); // this is an array
   res.render('showAnimals', { name: name, animals: animals });
-})
-
+});
+/*
 app.use('/', (req, res) => {
   var query = req.query;
   console.log(query);
@@ -122,6 +122,80 @@ app.use('/', (req, res) => {
   var length = Object.keys(query).length;
 
   res.send('Hello ' + name + ' from ' + location + '!');
+});
+*/
+var Person = require('./Person.js');
+
+app.use('/create', (req, res) => {
+  var newPerson = new Person({
+    name: req.body.name,
+    age: req.body.age
+  });
+
+  newPerson.save( (err) => {
+    if(err) {
+      res.type('html').status(500);
+      res.send('Error: ' + err);
+    } else {
+      res.render('created', { person: newPerson });
+    }
+  });
+});
+
+app.use('/all', (req, res) => {
+  Person.find( (err, allPeople) => { // allPeople - the array of all people found in the db
+    if (err) {
+      res.type('html').status(500);
+      res.send('Error: ' + err);
+    } else if (allPeople.length == 0) {
+      res.type('html').status(200);
+      res.send('There are no people');
+    } else {
+      res.render('showAll', { people: allPeople });
+    }
+  });
+});
+
+app.use('/person', (req, res) => {
+  var searchName = req.query.name;
+  Person.findOne( { name: searchName }, (err, person) => {
+    if(err) {
+      res.type('html').status(500);
+      res.send('Error: ' + err);
+    } else if (!person) {
+      res.type('html').status(200);
+      res.send('No person named ' + searchName);
+    } else {
+      res.render('personInfo', { person: person });
+    }
+  });
+});
+
+app.use('/update', (req, res) => {
+  var updateName = req.body.username;
+  Person.findOne( {name: updateName}, (err, person) => {
+    if(err) {
+      res.type('html').status(500);
+      res.send('Error: ' + err);
+    } else if (!person) {
+      res.type('html').status(200);
+      res.send('No person named ' + searchName);
+    } else {
+      person.age = req.body.age;
+      person.save( (err) => {
+        if(err) {
+          res.type('html').status(500);
+          res.send('Error: ' + err);
+        } else {
+          res.render('updated', { person: person });
+        }
+      });
+    }
+  });
+});
+
+app.use('/', (req, res) => {
+  res.redirect('/public/personform.html');
 });
 
 app.use(/*default*/ (req, res) => {
