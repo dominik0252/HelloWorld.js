@@ -89,6 +89,18 @@ app.use('/', (req, res) => {              // specifying that the URI '/' will tr
 });
 */
 
+app.use('/name/:userName/location/:userLocation', (req, res) => {
+  var params = req.params;
+  console.log(params);
+
+  var name = params.userName;
+  var location = params.userLocation;
+
+  var length = Object.keys(params).length;
+
+  res.send('Hello ' + name + ' from ' + location + '!');
+});
+
 app.use('/', (req, res) => {
   var query = req.query;
   console.log(query);
