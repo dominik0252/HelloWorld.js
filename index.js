@@ -101,6 +101,15 @@ app.use('/name/:userName/location/:userLocation', (req, res) => {
   res.send('Hello ' + name + ' from ' + location + '!');
 });
 
+var bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use('/handleForm', (req, res) => {
+  var name = req.body.username;
+  var animals = req.body.animal; // this is an array
+  res.send(name + ' loves ' + animals.join());
+})
+
 app.use('/', (req, res) => {
   var query = req.query;
   console.log(query);
