@@ -26,6 +26,17 @@ var adminName = (req, res, next) => {
   next();
 }
 
+var header = (req, res, next) => {
+  next();
+}
+
+var footer = (req, res, next) => {
+  next();
+}
+
+var commonRoute = express.Router();
+commonRoute.use(header, greeter, footer);
+
 // app.use(logger); // will be invoked on any HTTP request
 
 app.use('/about', (req, res) => {
@@ -38,11 +49,11 @@ app.use('/login', (req, res) => {
 
 app.use('/public', logger, express.static('files')); // we can have any number of middleware functions specified in the app.use function
 
-app.use('/welcome', nameFinder, greeter, (req, res) => {
+app.use('/welcome', logger, nameFinder, commonRoute, (req, res) => {
   res.end();
 });
 
-app.use('/admin', adminName, greeter, (req, res) => {
+app.use('/admin', logger, adminName, commonRoute, (req, res) => {
   res.end();
 });
 
