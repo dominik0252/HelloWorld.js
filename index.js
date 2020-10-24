@@ -125,6 +125,7 @@ app.use('/', (req, res) => {
 });
 */
 var Person = require('./Person.js');
+const { render } = require('ejs');
 
 app.use('/create', (req, res) => {
   var newPerson = new Person({
@@ -193,6 +194,71 @@ app.use('/update', (req, res) => {
     }
   });
 });
+
+var Book = require('./Book.js');
+
+app.use('/createBook', (req, res) => {
+  console.log(req.body);
+  var newBook = new Book(req.body);
+
+  newBook.save( (err) => {
+    if (err) {
+      res.type('html').status(500);
+      res.send('Error: ' + err);
+    } else {
+      res.render('bookCreated', { book: newBook });
+    }
+  });
+});
+
+app.use('/search', (req, res) => {
+  if(req.body.searchmethod == 'all') {
+    searchAll(req, res);
+  } else if (req.body.searchmethod == 'any') {
+    searchAny(req, res);
+  } else {
+    searchAll(req, res);
+  }
+});
+
+function searchAll(req, res) {
+  var query = {};
+
+  if(req.body.title) query.title = req.body.title;
+  if(req.body.year) query.year = req.body.year;
+  if(req.body.author) query['authors.name'] = req.body.author;
+
+  console.log(query);
+
+  Book.find( query, (err, books) => {
+    if(err) {
+      res.type('html').status(500);
+      res.send('Error: ' + err);
+    } else {
+      res.render('books', { books: books });
+    }
+  });
+}
+
+function searchAny(req, res) {
+  var terms = [];
+  if (req.body.title) terms.push({ title: { $regex: req.body.title } }); // $regex to retrieve books which have req.body.title as part of the title
+  if (req.body.year) terms.push({ year: req.body.year });
+  if (req.body.author) terms.push({ 'authors.name': req.body.author });
+
+  var query = { $or : terms };
+
+  console.log(query);
+
+  Book.find( query, (err, books) => {
+    if(err) {
+      res.type('html').status(500);
+      res.send('Error: ' + err);
+    } else {
+      res.render('books', { books: books });
+    }
+  }).sort( { 'title' : 'asc'} ); // will be called before the callback function that renders the result
+}
 
 app.use('/', (req, res) => {
   res.redirect('/public/personform.html');

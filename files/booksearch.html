@@ -1,0 +1,14 @@
+<html>
+  <body>
+    Indicate the search criteria:<br>
+    <form action="/search" method="POST">
+      Title: <input name="title"><br><br>
+      Author name: <input name="author"><br><br>
+      Year: <input name="year"><br><br>
+      <input type="radio" name="searchmethod" value="all" checked><label for="all">All</label><br>
+      <input type="radio" name="searchmethod" value="any"><label for="any">Any</label><br>
+      <br>
+      <input type="submit" value="Search">
+    </form>
+  </body>
+</html>

@@ -1,0 +1,13 @@
+<html>
+  <body>
+    Successfully created new book:<br><br>
+    Title: <%= book.title %><br><br>
+    Year: <%= book.year %><br><br>
+    Authors:
+    <ul>
+      <% book.authors.forEach( (author) => { %>
+        <li><%= author.name%> (<%= author.affiliation %>)</li>
+      <% }); %>
+    </ul>
+  </body>
+</html>

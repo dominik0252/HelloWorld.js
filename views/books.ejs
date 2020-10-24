@@ -1,0 +1,16 @@
+<html>
+  <body>
+    Books found:<br><br>
+    <ul>
+      <% books.forEach( (book) => { %>
+        <li>
+          <%= book.title %>,
+          <% book.authors.forEach( (author) => { %>
+            <%= author.name %> (<%= author.affiliation %>),
+          <% }); %>
+          <%= book.year %>.
+        </li>
+      <% }); %>
+    </ul>
+  </body>
+</html>
